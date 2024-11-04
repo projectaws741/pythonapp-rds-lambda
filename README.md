@@ -15,3 +15,33 @@ If we are able to add the data in to db then connection b/w lamda and db is good
 Now update the name of the lambda function in app.py file.
 
 Now start the application.
+
+Creating Dependencies:
+
+# Start a new container
+docker run -it --rm -v $(pwd):/opt python:3.9-slim bash
+
+# Inside the container, install psycopg2-binary
+apt-get update && apt-get install -y gcc libpq-dev zip
+pip install psycopg2-binary -t /opt/python
+
+# Create the zip file
+zip -r /opt/psycopg2_layer.zip /opt/python
+exit
+
+#aws s3 cp /path/to/psycopg2_layer.zip s3://your-bucket-name/
+
+Create or Update the Lambda Layer:
+
+In the AWS Management Console, go to Lambda > Layers.
+Create a new layer or update the existing one using the zip file you just uploaded to S3.
+Step 3: Add the Layer to Your Lambda Function
+Add the Layer:
+
+Go to your Lambda function in the AWS Management Console.
+In the Layers section, click Add a layer.
+Choose Custom layers, and select the layer you just created or updated.
+Ensure the Lambda Function Has the Correct Permissions:
+
+Ensure your Lambda function has permission to access the layer. If the layer is in a different account or region, you need to set the appropriate resource-based policy.
+
